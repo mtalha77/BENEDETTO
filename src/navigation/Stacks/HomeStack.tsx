@@ -2,10 +2,9 @@ import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
-import Login from '../../screens/Auth/Login';
-import SignUp from '../../screens/Auth/SignUp';
+import HomeTab from '../Tabs/HomeTab';
 
-const AuthStack = () => {
+const HomeStack = () => {
   const Stack = createNativeStackNavigator();
   return (
     <SafeAreaView
@@ -13,15 +12,14 @@ const AuthStack = () => {
         flex: 1,
       }}>
       <Stack.Navigator
-        initialRouteName="Login"
+        initialRouteName="HomeTab"
         screenOptions={{
           headerShown: false,
         }}>
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="SignUp" component={SignUp} />
+        <Stack.Screen name="HomeTab" component={HomeTab} />
       </Stack.Navigator>
     </SafeAreaView>
   );
 };
 
-export default AuthStack;
+export default HomeStack;

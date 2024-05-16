@@ -3,7 +3,6 @@ import {Image, StyleSheet, View} from 'react-native';
 import {AppImages} from '../../Theme/AppImages';
 
 interface ComponentProps {
-  size?: number;
   black?: boolean;
 }
 
@@ -26,10 +25,12 @@ const styles = StyleSheet.create({
     paddingVertical: 30,
     paddingTop: 50,
   },
+  wrapperSize: {},
   black: {
     backgroundColor: 'black',
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
+    paddingTop: 0,
     paddingVertical: 10,
   },
   image: {
