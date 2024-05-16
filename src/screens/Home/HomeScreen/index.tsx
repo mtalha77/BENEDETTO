@@ -47,7 +47,14 @@ const HomeScreen: React.FC<ScreenProps> = ({navigation}) => {
 
   const renderItem = ({item}) => {
     return (
-      <ServiceRenderItem item={item} onPress={id => console.log(id)}>
+      <ServiceRenderItem
+        item={item}
+        onPress={() =>
+          navigation.navigate('ServiceDetail', {
+            item: item,
+            wish: false,
+          })
+        }>
         <SmallHeading color={Theme.colors.red}>Read More</SmallHeading>
       </ServiceRenderItem>
     );
@@ -101,13 +108,14 @@ const HomeScreen: React.FC<ScreenProps> = ({navigation}) => {
         ListHeaderComponent={() => {
           return (
             <View style={styles.headingWrapper}>
-              <LargeHeading>Services We offers</LargeHeading>
+              <LargeHeading>Services We offer</LargeHeading>
             </View>
           );
         }}
         contentContainerStyle={styles.listContainerStyle}
         ItemSeparatorComponent={<View style={styles.margin} />}
         renderItem={renderItem}
+        showsVerticalScrollIndicator={false}
       />
     </View>
   );
@@ -126,7 +134,6 @@ const styles = StyleSheet.create({
     paddingBottom: 50,
   },
   bannerImage: {
-    backgroundColor: 'orange',
     width: width - 20,
     alignSelf: 'center',
     marginVertical: 10,

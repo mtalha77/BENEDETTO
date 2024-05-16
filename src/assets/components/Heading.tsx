@@ -6,15 +6,18 @@ interface ComponentProps {
   children: string;
   size?: number;
   color?: string;
+  onPress?: () => void;
 }
 
 const SmallHeading: React.FC<ComponentProps> = ({
   children,
   size = 12,
   color,
+  onPress,
 }) => {
   return (
     <Text
+      onPress={onPress}
       style={[
         styles.small,
         {

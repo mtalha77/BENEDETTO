@@ -7,7 +7,6 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {Logo} from '../../../assets/components/Logo';
 import {LargeHeading, SmallHeading} from '../../../assets/components/Heading';
 import {ServiceImages} from '../../../Theme/AppImages';
-import {width} from '../../../Theme/Dimensions';
 import {ServiceRenderItem} from '../../../assets/components/ServiceRenderItem';
 
 interface ScreenProps {
@@ -44,8 +43,29 @@ const Services = [
 const WishList: React.FC<ScreenProps> = ({navigation}) => {
   const renderItem = ({item}) => {
     return (
-      <ServiceRenderItem item={item} onPress={id => console.log(id)}>
-        <SmallHeading color={Theme.colors.red}>Read More</SmallHeading>
+      <ServiceRenderItem
+        item={item}
+        onPress={() =>
+          navigation.navigate('ServiceDetail', {
+            item: item,
+            wish: true,
+          })
+        }>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}>
+          <SmallHeading color={Theme.colors.red}>Read More</SmallHeading>
+          <SmallHeading
+            onPress={() => {
+              console.log('removed Item');
+            }}
+            color={Theme.colors.red}>
+            Remove From List
+          </SmallHeading>
+        </View>
       </ServiceRenderItem>
     );
   };
@@ -68,6 +88,7 @@ const WishList: React.FC<ScreenProps> = ({navigation}) => {
       style={styles.mainContainer}
       ItemSeparatorComponent={<View style={styles.margin} />}
       renderItem={renderItem}
+      showsVerticalScrollIndicator={false}
     />
   );
 };

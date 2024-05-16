@@ -6,23 +6,29 @@ import {SmallHeading} from './Heading';
 import {Description} from './Description';
 
 interface ComponentProps {
-  onPress: (ID: string) => void;
+  onPress: () => void;
   children?: React.ReactNode;
   item: {img: number; title: string; description: string};
+  showPrice?: boolean;
 }
 
 const ServiceRenderItem: React.FC<ComponentProps> = ({
   item,
   children,
   onPress,
+  showPrice = false,
 }) => {
   return (
     <TouchableOpacity
-      onPress={() => onPress(item.title)}
+      activeOpacity={1}
+      onPress={onPress}
       style={styles.container}>
       <Image style={styles.image} source={item.img} />
       <View style={styles.subContainer}>
-        <SmallHeading>{item.title}</SmallHeading>
+        <View style={styles.row}>
+          <SmallHeading>{item.title}</SmallHeading>
+          {showPrice && <SmallHeading size={10}>{item.price}</SmallHeading>}
+        </View>
         <View style={styles.margin} />
 
         <Description height={50} size={10}>
@@ -43,6 +49,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   image: {
     height: 100,

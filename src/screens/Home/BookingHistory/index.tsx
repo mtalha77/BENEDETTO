@@ -5,9 +5,8 @@ import {Theme} from '../../../Theme/Theme';
 
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {Logo} from '../../../assets/components/Logo';
-import {LargeHeading, SmallHeading} from '../../../assets/components/Heading';
+import {SmallHeading} from '../../../assets/components/Heading';
 import {ServiceImages} from '../../../Theme/AppImages';
-
 import {ServiceRenderItem} from '../../../assets/components/ServiceRenderItem';
 
 interface ScreenProps {
@@ -20,41 +19,36 @@ const Services = [
     title: 'Auto Detailing',
     description:
       'Welcome to Benedetto Auto Detail, your one-stop solution for premium auto detailing services.',
-    price: '$120',
   },
   {
     img: ServiceImages['2'],
     title: 'Ceramic Coating',
     description:
       'CRYSTAL SERUM CERAMIC COATING provides a Supreme Hard Protection, Scratch & Swirls Resistant.',
-    price: '$90',
   },
   {
     img: ServiceImages['3'],
     title: 'Interior Coating',
     description:
       'LEATHER GUARD COATING is made out of nanotechnology and is a Super Hydro-Phobic Coating that Protects.',
-    price: '$10',
   },
   {
     img: ServiceImages['4'],
     title: 'Paint Protection Film',
     description:
       'Benedetto Auto Detail understands that your vehicle is an investment that you want to protect.',
-    price: '$150',
   },
 ];
 
-const Cart: React.FC<ScreenProps> = ({navigation}) => {
+const BookingHistory: React.FC<ScreenProps> = ({navigation}) => {
   const renderItem = ({item}) => {
     return (
       <ServiceRenderItem
-        showPrice
         item={item}
         onPress={() =>
           navigation.navigate('ServiceDetail', {
             item: item,
-            wish: false,
+            wish: true,
           })
         }>
         <View
@@ -63,13 +57,20 @@ const Cart: React.FC<ScreenProps> = ({navigation}) => {
             alignItems: 'center',
             justifyContent: 'space-between',
           }}>
-          <SmallHeading color={Theme.colors.red}>Read More</SmallHeading>
+          <SmallHeading
+            onPress={() => console.log('Booking Again')}
+            color={Theme.colors.red}>
+            Book Again
+          </SmallHeading>
           <SmallHeading
             onPress={() => {
-              console.log('removed Item');
+              navigation.navigate('BookingReciept', {
+                item: item,
+                thanks: false,
+              });
             }}
             color={Theme.colors.red}>
-            Remove From Cart
+            View Receipt
           </SmallHeading>
         </View>
       </ServiceRenderItem>
@@ -80,15 +81,9 @@ const Cart: React.FC<ScreenProps> = ({navigation}) => {
     <FlatList
       data={Services}
       stickyHeaderIndices={[0]}
-      showsVerticalScrollIndicator={false}
       ListHeaderComponent={() => {
         return (
-          <View>
-            <Logo />
-            <View style={styles.headingWrapper}>
-              <LargeHeading>Services In Your Cart</LargeHeading>
-            </View>
-          </View>
+          <Logo back={() => navigation.goBack()}>Your Booking History</Logo>
         );
       }}
       contentContainerStyle={styles.mainContentContainerStyle}
@@ -113,10 +108,6 @@ const styles = StyleSheet.create({
   margin: {
     height: 10,
   },
-  headingWrapper: {
-    padding: 15,
-    backgroundColor: Theme.colors.background,
-  },
 });
 
-export default Cart;
+export default BookingHistory;

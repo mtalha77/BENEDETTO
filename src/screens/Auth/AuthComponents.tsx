@@ -24,10 +24,15 @@ export const Heading: React.FC<HeadingProps> = ({children}) => {
 
 interface DescriptionProps {
   children: string;
+  color?: string;
 }
 
-export const Description: React.FC<HeadingProps> = ({children}) => {
-  return <Text style={styles.description}>{children}</Text>;
+export const Description: React.FC<HeadingProps> = ({children, color}) => {
+  return (
+    <Text style={[styles.description, color && {color: color}]}>
+      {children}
+    </Text>
+  );
 };
 
 interface SocialLoginProps {

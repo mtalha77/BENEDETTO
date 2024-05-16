@@ -42,7 +42,11 @@ const Login: React.FC<ScreenProps> = ({navigation}) => {
         title="Password">
         Enter Your Password
       </InputField>
-      <Text style={styles.forgotPassword}>Forgot Password?</Text>
+      <Text
+        onPress={() => navigation.navigate('ForgotPassword')}
+        style={styles.forgotPassword}>
+        Forgot Password?
+      </Text>
       <Button onPress={() => navigation.replace('HomeStack')}>LOGIN</Button>
       <SocialLogin
         onPress={id => {

@@ -19,6 +19,7 @@ const MainNav = () => {
           headerShown: false,
           statusBarColor: Theme.colors.background,
           navigationBarColor: Theme.colors.background,
+          animation:"slide_from_right"
         }}>
         <Stack.Screen name="SplashScreen" component={SplashScreen} />
         <Stack.Screen name="AuthStack" component={AuthStack} />

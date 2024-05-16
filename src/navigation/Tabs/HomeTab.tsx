@@ -4,7 +4,7 @@ import {
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 
-import {View, TouchableOpacity, Animated} from 'react-native';
+import {View, TouchableOpacity, Animated, Linking} from 'react-native';
 
 import Entypo from 'react-native-vector-icons/Entypo';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -152,38 +152,39 @@ const MyTabBar = ({state, descriptors, navigation}) => {
           const isFocused = state.index === index;
 
           const onPress = () => {
-            Animated.timing(position, {
-              toValue: index,
-              duration: 300,
-              useNativeDriver: true,
-            }).start();
+            if (index !== 3) {
+              Animated.timing(position, {
+                toValue: index,
+                duration: 300,
+                useNativeDriver: true,
+              }).start();
 
-            const event = navigation.emit({
-              type: 'tabPress',
-              target: route.key,
-              canPreventDefault: true,
-            });
+              const event = navigation.emit({
+                type: 'tabPress',
+                target: route.key,
+                canPreventDefault: true,
+              });
 
-            if (!isFocused && !event.defaultPrevented) {
-              navigation.navigate(route.name, route.params);
+              if (!isFocused && !event.defaultPrevented) {
+                navigation.navigate(route.name, route.params);
+              }
+              return;
+            } else {
+              Linking.openURL(
+                'whatsapp://send?text=BENEDETTO&phone=+923044648541',
+              )
+                .then(data => {
+                  console.log('WhatsApp Opened');
+                })
+                .catch(() => {
+                  alert('Make sure WhatsApp installed on your device');
+                });
             }
           };
 
-          const onLongPress = () => {
-            Animated.timing(position, {
-              toValue: index,
-              duration: 600,
-              useNativeDriver: true,
-            }).start();
-            navigation.emit({
-              type: 'tabLongPress',
-              target: route.key,
-            });
-          };
           return (
             <TouchableOpacity
               onPress={onPress}
-              onLongPress={onLongPress}
               activeOpacity={1}
               style={{
                 width: width / 5,
