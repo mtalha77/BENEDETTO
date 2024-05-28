@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>611411216780-2dtgtiju6ulpemjhnsrpe8gc5keuo1c0.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.611411216780-2dtgtiju6ulpemjhnsrpe8gc5keuo1c0</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>611411216780-gcv8kq32dl0h1l5do7udob84iafkkutu.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAWINuVkvSWuoLDVsP-0veQc_FccOuREgE</string>
+	<key>GCM_SENDER_ID</key>
+	<string>611411216780</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>org.reactjs.native.example.BENEDETTO</string>
+	<key>PROJECT_ID</key>
+	<string>benedetto-adc23</string>
+	<key>STORAGE_BUCKET</key>
+	<string>benedetto-adc23.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:611411216780:ios:339a6fd4a693951c88eea9</string>
+</dict>
+</plist>

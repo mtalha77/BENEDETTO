@@ -1,16 +1,16 @@
 import React, {useState} from 'react';
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {ScrollView, StyleSheet, View} from 'react-native';
 
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import auth from '@react-native-firebase/auth';
 import Toast from 'react-native-toast-message';
 
-import {Logo} from '../../../assets/components/Logo';
-import {Theme} from '../../../Theme/Theme';
-import InputField, {Description, Heading, TextInText} from '../AuthComponents';
-import {Button} from '../../../assets/components/Button';
-import SocialAuthentication from '../../../assets/components/SocialAuthentication';
-import {CustomActivityIndicator} from '../../../assets/components/ActivityIndicator';
+import {Logo} from '../assets/components/Logo';
+import {Theme} from '../Theme/Theme';
+import InputField, {Description, Heading} from '../screens/Auth/AuthComponents';
+import {Button} from '../assets/components/Button';
+
+import {CustomActivityIndicator} from '../assets/components/ActivityIndicator';
 
 const re =
   /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
@@ -51,24 +51,16 @@ const Login: React.FC<ScreenProps> = ({navigation}) => {
 
   const CheckCredentials = async () => {
     try {
-      setShowMessage('Verifying User Credentials...');
-      const {user} = await auth().signInWithEmailAndPassword(email, password);
-      if (user.emailVerified) {
-        setShowMessage('');
-        setEmail('');
-        setPassword('');
-        navigation.replace('HomeStack');
-      } else {
-        await auth().signOut();
-        Toast.show({
-          type: 'info',
-          text1: 'Email Not Verified.',
-          text2: 'Please Check your email for verification.',
-        });
-        setShowMessage('');
-      }
+      setShowMessage('Verifying Admin Credentials...');
+      await auth().signInWithEmailAndPassword(email, password);
+      setShowMessage('');
+      setEmail('');
+      setPassword('');
+      navigation.replace('CartListings');
     } catch (error) {
       setShowMessage('');
+      setEmail('');
+      setPassword('');
       Toast.show({
         type: 'error',
         text1: 'Incorrect Credentials',
@@ -83,7 +75,7 @@ const Login: React.FC<ScreenProps> = ({navigation}) => {
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="always">
         <Logo black={false} />
-        <Heading>Welcome to Benedetto</Heading>
+        <Heading>Welcome Admin</Heading>
         <Description>
           Benedetto Auto Detail has been serving the market with more than a
           decade through premium coating and auto detailing services in town
@@ -103,18 +95,7 @@ const Login: React.FC<ScreenProps> = ({navigation}) => {
           title="Password">
           Enter Your Password
         </InputField>
-        <Text
-          onPress={() => navigation.navigate('ForgotPassword')}
-          style={styles.forgotPassword}>
-          Forgot Password?
-        </Text>
         <Button onPress={validation}>LOGIN</Button>
-        <SocialAuthentication>or Sign In Using</SocialAuthentication>
-        <TextInText
-          prefix="Don't have an account?"
-          onPress={() => navigation.navigate('SignUp')}>
-          Sign Up
-        </TextInText>
       </ScrollView>
       <CustomActivityIndicator show={showMessage} />
     </View>

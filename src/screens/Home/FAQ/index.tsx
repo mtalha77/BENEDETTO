@@ -16,59 +16,39 @@ interface ScreenProps {
 
 const DATA = [
   {
-    question: 'Daffodils?',
+    question: 'How often should I get my car detailed?',
     answer:
-      'And then my heart with pleasure fills and dances with the daffodils',
+      'It is suggested to clean your car thoroughly every 4-6 months. This helps keep it looking good and holds its worth. Yet, how often you do this can change. It depends on how much you drive and where you live.',
   },
   {
-    question: 'Daffodils?',
+    question: 'How long does ceramic coating last?',
     answer:
-      'And then my heart with pleasure fills and dances with the daffodils',
+      'Ceramic coatings have­ a lifetime of 2 to 5 years. It depe­nds on the specific product and maintenance. The durability of the coating can be longer with regular care.',
   },
   {
-    question: 'Daffodils?',
+    question: 'Can ceramic coating be applied to any vehicle?',
     answer:
-      'And then my heart with pleasure fills and dances with the daffodils',
+      "Indeed, cars of all kinds, new or old, can receive a ceramic coating. The greatest outcomes arise when applied to a vehicle with a surface that's spotless and slick.",
   },
   {
-    question: 'Daffodils?',
+    question: 'How do I maintain my interior coating?',
     answer:
-      'And then my heart with pleasure fills and dances with the daffodils',
+      'Keep your inside surfaces in good shape by cleaning regularly with suitable products. Refusing from harsh chemicals will help. Following the care directions given at the service can make it last longer.',
   },
   {
-    question: 'Daffodils?',
+    question: 'How long does paint protection film last?',
     answer:
-      'And then my heart with pleasure fills and dances with the daffodils',
+      'High-quality paint protection film can last up to 10 years with proper care. It provides long-term protection against various environmental and physical damages.',
   },
   {
-    question: 'Daffodils?',
+    question: 'Will paint protection film affect the appearance of my car?',
     answer:
-      'And then my heart with pleasure fills and dances with the daffodils',
+      'No, paint protection film is virtually invisible and will not change the appearance of your car. It increases the shine and provides a glossy finish while protecting the paint.',
   },
   {
-    question: 'Daffodils?',
+    question: 'How do I book a service appointment?',
     answer:
-      'And then my heart with pleasure fills and dances with the daffodils',
-  },
-  {
-    question: 'Daffodils?',
-    answer:
-      'And then my heart with pleasure fills and dances with the daffodils',
-  },
-  {
-    question: 'Daffodils?',
-    answer:
-      'And then my heart with pleasure fills and dances with the daffodils',
-  },
-  {
-    question: 'Daffodils?',
-    answer:
-      'And then my heart with pleasure fills and dances with the daffodils',
-  },
-  {
-    question: 'Daffodils?',
-    answer:
-      'And then my heart with pleasure fills and dances with the daffodils',
+      'You can book a service appointment through our website, or our mobile app, by calling our office, or by visiting our location in person. We recommend booking in advance to secure your preferred time slot.',
   },
 ];
 
@@ -105,16 +85,14 @@ const FAQ: React.FC<ScreenProps> = ({navigation}) => {
   };
 
   return (
-    <FlatList
-      data={DATA}
-      ListHeaderComponent={() => {
-        return <Logo back={() => navigation.goBack()}>FAQ's</Logo>;
-      }}
-      stickyHeaderIndices={[0]}
-      renderItem={renderItem}
-      style={styles.mainContainer}
-      showsVerticalScrollIndicator={false}
-    />
+    <View style={styles.mainContainer}>
+      <Logo back={() => navigation.goBack()}>FAQ's</Logo>
+      <FlatList
+        data={DATA}
+        renderItem={renderItem}
+        showsVerticalScrollIndicator={false}
+      />
+    </View>
   );
 };
 

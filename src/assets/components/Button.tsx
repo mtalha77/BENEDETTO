@@ -5,13 +5,24 @@ import {Theme} from '../../Theme/Theme';
 interface ComponentProps {
   children: string;
   onPress: () => void;
+  disabled?: boolean;
 }
 
-const Button: React.FC<ComponentProps> = ({children, onPress}) => {
+const Button: React.FC<ComponentProps> = ({
+  children,
+  onPress,
+  disabled = false,
+}) => {
   return (
     <TouchableOpacity
       onPress={onPress}
-      style={styles.container}
+      style={[
+        styles.container,
+        disabled && {
+          backgroundColor: 'grey',
+        },
+      ]}
+      disabled={disabled}
       activeOpacity={0.8}>
       <Text style={styles.text}>{children}</Text>
     </TouchableOpacity>

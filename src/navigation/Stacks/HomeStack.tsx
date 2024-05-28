@@ -21,6 +21,7 @@ const HomeStack = () => {
         screenOptions={{
           headerShown: false,
           animation: 'slide_from_right',
+          statusBarColor: 'black',
         }}>
         <Stack.Screen name="HomeTab" component={HomeTab} />
         <Stack.Screen name="ServiceDetail" component={ServiceDetail} />

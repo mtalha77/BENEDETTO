@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {TouchableOpacity, Text, Image, StyleSheet, View} from 'react-native';
+import React from 'react';
+import {TouchableOpacity, Image, StyleSheet, View} from 'react-native';
 
 import {width} from '../../Theme/Dimensions';
 import {SmallHeading} from './Heading';
@@ -23,16 +23,20 @@ const ServiceRenderItem: React.FC<ComponentProps> = ({
       activeOpacity={1}
       onPress={onPress}
       style={styles.container}>
-      <Image style={styles.image} source={item.img} />
+      <Image style={styles.image} source={{uri: item.image}} />
       <View style={styles.subContainer}>
         <View style={styles.row}>
           <SmallHeading>{item.title}</SmallHeading>
-          {showPrice && <SmallHeading size={10}>{item.price}</SmallHeading>}
+          {showPrice && (
+            <View style={styles.priceWrapper}>
+              <SmallHeading size={10}>$ {item.price}</SmallHeading>
+            </View>
+          )}
         </View>
         <View style={styles.margin} />
 
         <Description height={50} size={10}>
-          {item.description}
+          {item.shortDescription}
         </Description>
         {children}
       </View>
@@ -68,6 +72,9 @@ const styles = StyleSheet.create({
   },
   margin: {
     height: 10,
+  },
+  priceWrapper: {
+    alignItems: 'flex-end',
   },
 });
 

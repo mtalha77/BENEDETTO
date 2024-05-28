@@ -35,48 +35,6 @@ export const Description: React.FC<HeadingProps> = ({children, color}) => {
   );
 };
 
-interface SocialLoginProps {
-  onPress: (id: string) => void;
-  children: string;
-}
-
-const SocialData = [
-  {
-    tag: 'Google',
-    img: require('../../assets/images/google.webp'),
-  },
-  {
-    tag: 'Facebook',
-    img: require('../../assets/images/facebook.webp'),
-  },
-];
-
-export const SocialLogin: React.FC<SocialLoginProps> = ({
-  children,
-  onPress,
-}) => {
-  return (
-    <View style={styles.socialLoginWrapper}>
-      <View style={styles.socialTitleWrapper}>
-        <View style={styles.socialTitleDecoration} />
-        <Text style={styles.socialLoginTitle}>{children}</Text>
-      </View>
-      <View style={styles.socialButtonContainer}>
-        {SocialData.map(k => {
-          return (
-            <TouchableOpacity
-              onPress={() => onPress(k.tag)}
-              style={styles.socialContainer}>
-              <Image source={k.img} style={styles.socialImage} />
-              <Text style={styles.socialTag}>{k.tag}</Text>
-            </TouchableOpacity>
-          );
-        })}
-      </View>
-    </View>
-  );
-};
-
 interface TextInTextProps {
   children: string;
   prefix: string;
@@ -106,6 +64,7 @@ interface InputFieldProps {
   setValue: React.Dispatch<React.SetStateAction<string>>;
   title?: string;
   wrapperStyle?: ViewStyle;
+  keyboardType?: 'default' | 'email-address';
 }
 
 const InputField: React.FC<InputFieldProps> = ({
@@ -115,6 +74,7 @@ const InputField: React.FC<InputFieldProps> = ({
   setValue,
   title,
   wrapperStyle = {},
+  keyboardType = 'default',
 }) => {
   const [show, setShow] = useState(true);
 
@@ -129,6 +89,7 @@ const InputField: React.FC<InputFieldProps> = ({
           style={styles.inputField}
           placeholder={children}
           placeholderTextColor={Theme.colors.description}
+          keyboardType={keyboardType}
         />
         {secure && (
           <TouchableOpacity
@@ -185,52 +146,6 @@ const styles = StyleSheet.create({
     fontFamily: Theme.fontFamily.Inter.medium,
     color: 'white',
     marginBottom: 2,
-  },
-  socialLoginWrapper: {},
-  socialButtonContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-evenly',
-  },
-  socialTitleWrapper: {
-    margin: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  socialTitleDecoration: {
-    height: 1,
-    backgroundColor: 'white',
-    position: 'absolute',
-    width: '100%',
-  },
-  socialLoginTitle: {
-    color: 'white',
-    fontSize: 12,
-    fontFamily: Theme.fontFamily.Inter.medium,
-    backgroundColor: Theme.colors.background,
-    paddingHorizontal: 20,
-  },
-  socialContainer: {
-    flexDirection: 'row',
-    borderWidth: 1,
-    borderColor: 'rgba(220, 219, 221, 1)',
-    borderRadius: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: (width - 45) / 2,
-    height: 50,
-    backgroundColor: '#2B2B2B',
-  },
-  socialImage: {
-    width: 25,
-    height: 25,
-    resizeMode: 'contain',
-  },
-  socialTag: {
-    fontSize: 18,
-    fontFamily: Theme.fontFamily.Inter.medium,
-    color: 'white',
-    marginLeft: 5,
   },
   textInTextPrefix: {
     color: 'white',

@@ -1,5 +1,7 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
 import {Logo} from '../../../assets/components/Logo';
 import {LargeHeading, SmallHeading} from '../../../assets/components/Heading';
@@ -31,6 +33,26 @@ interface ScreenProps {
 
 const BookingReciept: React.FC<ScreenProps> = ({navigation, route}) => {
   const {item, thanks} = route.params;
+
+  console.log(item);
+
+  const [displayName, setDisplayName] = useState('');
+
+  useEffect(() => {
+    const handleGetUserProfile = async () => {
+      if (auth().currentUser?.displayName === null) {
+        const userData = await firestore()
+          .collection('USERS')
+          .doc(auth().currentUser?.email)
+          .get();
+        setDisplayName(userData['_data'].displayName);
+      } else {
+        setDisplayName(auth().currentUser?.displayName);
+      }
+    };
+    handleGetUserProfile();
+  }, []);
+
   return (
     <View style={styles.mainContainer}>
       <Logo back={() => navigation.goBack()}>
@@ -41,17 +63,29 @@ const BookingReciept: React.FC<ScreenProps> = ({navigation, route}) => {
 
       {thanks && (
         <>
-          <Description color="white">{item.description}</Description>
+          <Description color="white">
+            {item.serviceData['_data'].shortDescription}
+          </Description>
           <View style={styles.description}>
             <LargeHeading>Your Booking Details Given Below</LargeHeading>
           </View>
         </>
       )}
-      <RowField prefix="Name">Lorem Ipsum</RowField>
-      <RowField prefix="Service">{item.title}</RowField>
-      <RowField prefix="Date">30/02/2025</RowField>
-      <RowField prefix="Time">12:30 AM</RowField>
-      <RowField prefix="Total Amount:">$120</RowField>
+      <RowField prefix="Name">{displayName}</RowField>
+      <RowField prefix="Service">{item.serviceData['_data'].title}</RowField>
+      <RowField prefix="Date">
+        {item?.bookingData['_data']?.date
+          ? item?.bookingData['_data']?.date
+          : item?.bookingData?.date}
+      </RowField>
+      <RowField prefix="Time">
+        {item?.bookingData['_data']?.time
+          ? item?.bookingData['_data']?.time
+          : item?.bookingData?.time}
+      </RowField>
+      <RowField prefix="Total Amount:">
+        $ {item.serviceData['_data'].price}
+      </RowField>
     </View>
   );
 };

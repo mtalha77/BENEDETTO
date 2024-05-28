@@ -1,54 +1,56 @@
-import React from 'react';
-import {View, FlatList, StyleSheet} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  View,
+  FlatList,
+  StyleSheet,
+  Text,
+  ActivityIndicator,
+} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import firestore from '@react-native-firebase/firestore';
 
 import {Theme} from '../../../Theme/Theme';
-
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {Logo} from '../../../assets/components/Logo';
 import {LargeHeading, SmallHeading} from '../../../assets/components/Heading';
-import {ServiceImages} from '../../../Theme/AppImages';
 import {ServiceRenderItem} from '../../../assets/components/ServiceRenderItem';
+import {removeFromLiked} from '../../../redux/actions/Actions';
 
 interface ScreenProps {
   navigation: NativeStackNavigationProp<any>;
 }
 
-const Services = [
-  {
-    img: ServiceImages['1'],
-    title: 'Auto Detailing',
-    description:
-      'Welcome to Benedetto Auto Detail, your one-stop solution for premium auto detailing services.',
-  },
-  {
-    img: ServiceImages['2'],
-    title: 'Ceramic Coating',
-    description:
-      'CRYSTAL SERUM CERAMIC COATING provides a Supreme Hard Protection, Scratch & Swirls Resistant.',
-  },
-  {
-    img: ServiceImages['3'],
-    title: 'Interior Coating',
-    description:
-      'LEATHER GUARD COATING is made out of nanotechnology and is a Super Hydro-Phobic Coating that Protects.',
-  },
-  {
-    img: ServiceImages['4'],
-    title: 'Paint Protection Film',
-    description:
-      'Benedetto Auto Detail understands that your vehicle is an investment that you want to protect.',
-  },
-];
-
 const WishList: React.FC<ScreenProps> = ({navigation}) => {
+  const {liked} = useSelector(state => state);
+  const dispatch = useDispatch();
+  const [services, setServices] = useState([]);
+  const [showActivityIndicator, setShowActivityIndicator] = useState(false);
+
+  useEffect(() => {
+    handleGettingServices();
+  }, []);
+
+  const handleGettingServices = async () => {
+    try {
+      setShowActivityIndicator(true);
+      const Services = await firestore().collection('SERVICES').get();
+      if (Services) {
+        setServices(Services.docs);
+        setShowActivityIndicator(false);
+      }
+    } catch (error) {
+      console.log('Error in WishList Screen handleGettingServices() ' + error);
+    }
+  };
+
   const renderItem = ({item}) => {
     return (
       <ServiceRenderItem
-        item={item}
+        item={item['_data']}
         onPress={() =>
           navigation.navigate('ServiceDetail', {
             item: item,
-            wish: true,
+            path: '',
           })
         }>
         <View
@@ -60,7 +62,7 @@ const WishList: React.FC<ScreenProps> = ({navigation}) => {
           <SmallHeading color={Theme.colors.red}>Read More</SmallHeading>
           <SmallHeading
             onPress={() => {
-              console.log('removed Item');
+              dispatch(removeFromLiked(item.id));
             }}
             color={Theme.colors.red}>
             Remove From List
@@ -72,7 +74,7 @@ const WishList: React.FC<ScreenProps> = ({navigation}) => {
 
   return (
     <FlatList
-      data={Services}
+      data={services.filter(f => liked?.includes(f.id))}
       stickyHeaderIndices={[0]}
       ListHeaderComponent={() => {
         return (
@@ -89,6 +91,20 @@ const WishList: React.FC<ScreenProps> = ({navigation}) => {
       ItemSeparatorComponent={<View style={styles.margin} />}
       renderItem={renderItem}
       showsVerticalScrollIndicator={false}
+      ListEmptyComponent={() => {
+        return (
+          <View style={styles.activityIndicatorWrapper}>
+            {showActivityIndicator && (
+              <ActivityIndicator color="white" size="small" />
+            )}
+            <Text style={styles.messageText}>
+              {showActivityIndicator
+                ? 'Fetching wishlist'
+                : 'nothing in wishlist'}
+            </Text>
+          </View>
+        );
+      }}
     />
   );
 };
@@ -109,6 +125,18 @@ const styles = StyleSheet.create({
   headingWrapper: {
     padding: 15,
     backgroundColor: Theme.colors.background,
+  },
+  activityIndicatorWrapper: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 20,
+  },
+  messageText: {
+    color: 'white',
+    fontSize: 12,
+    fontFamily: Theme.fontFamily.Inter.regular,
+    textAlign: 'center',
+    marginTop: 10,
   },
 });
 

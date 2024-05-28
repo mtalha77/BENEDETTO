@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {
   BottomTabNavigationProp,
   createBottomTabNavigator,
@@ -73,6 +73,14 @@ const MyTabBar = ({state, descriptors, navigation}) => {
       inputRange: [0, 1],
       outputRange: [0, -(width / 5)],
     });
+
+  useEffect(() => {
+    Animated.timing(position, {
+      toValue: state.index,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+  }, [state.index]);
 
   return (
     <View
@@ -153,12 +161,6 @@ const MyTabBar = ({state, descriptors, navigation}) => {
 
           const onPress = () => {
             if (index !== 3) {
-              Animated.timing(position, {
-                toValue: index,
-                duration: 300,
-                useNativeDriver: true,
-              }).start();
-
               const event = navigation.emit({
                 type: 'tabPress',
                 target: route.key,

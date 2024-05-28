@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
   small: {
     color: 'white',
     fontFamily: Theme.fontFamily.Inter.medium,
+    flex: 1,
   },
   large: {
     color: 'white',

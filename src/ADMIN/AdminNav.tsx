@@ -1,36 +1,32 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-
+import auth from '@react-native-firebase/auth';
 import Toast from 'react-native-toast-message';
 
+import Login from './Login';
 import {Theme} from '../Theme/Theme';
+import CartListings from './CartListings';
 
-import SplashScreen from '../screens/SplashScreen';
-import AuthStack from './Stacks/AuthStack';
-import HomeStack from './Stacks/HomeStack';
-
-const MainNav = () => {
+const AdminNav = () => {
   const Stack = createNativeStackNavigator();
-
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="SplashScreen"
+        initialRouteName={auth().currentUser?.email ? 'CartListings' : 'Login'}
         screenOptions={{
           headerShown: false,
+          animation: 'slide_from_bottom',
           statusBarColor: Theme.colors.background,
           navigationBarColor: Theme.colors.background,
-          animation: 'slide_from_right',
           orientation: 'portrait',
         }}>
-        <Stack.Screen name="SplashScreen" component={SplashScreen} />
-        <Stack.Screen name="AuthStack" component={AuthStack} />
-        <Stack.Screen name="HomeStack" component={HomeStack} />
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="CartListings" component={CartListings} />
       </Stack.Navigator>
       <Toast />
     </NavigationContainer>
   );
 };
 
-export default MainNav;
+export default AdminNav;

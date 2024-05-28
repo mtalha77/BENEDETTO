@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">BENEDETTO</string>
+    <string name="facebook_app_id">473525615185934</string>
+    <string name="facebook_client_token">370d871f291b198ccd17393ecd15f0c1</string>
 </resources>

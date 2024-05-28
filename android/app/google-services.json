@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "611411216780",
+    "project_id": "benedetto-adc23",
+    "storage_bucket": "benedetto-adc23.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:611411216780:android:5e29d35d59c2502e88eea9",
+        "android_client_info": {
+          "package_name": "com.benedetto"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "611411216780-gcv8kq32dl0h1l5do7udob84iafkkutu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.benedetto",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "611411216780-ai8l9n0jl6lecd6fs6t163pc21gt0b1a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBM5wn8j65jxt1w4HRGMy1-p2qKQEh6fy0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "611411216780-ai8l9n0jl6lecd6fs6t163pc21gt0b1a.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "611411216780-2dtgtiju6ulpemjhnsrpe8gc5keuo1c0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "org.reactjs.native.example.BENEDETTO"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

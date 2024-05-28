@@ -1,6 +1,7 @@
 import React, {useEffect} from 'react';
 import {View, Image, StyleSheet} from 'react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import auth from '@react-native-firebase/auth';
 
 import {Theme} from '../../Theme/Theme';
 import {AppImages} from '../../Theme/AppImages';
@@ -12,9 +13,21 @@ interface ScreenProps {
 
 const SplashScreen: React.FC<ScreenProps> = ({navigation}) => {
   useEffect(() => {
-    setTimeout(() => {
-      navigation.replace('AuthStack');
-    }, 1500);
+    const checkIfSignedIn = async () => {
+      if (
+        auth().currentUser !== undefined &&
+        auth().currentUser?.emailVerified
+      ) {
+        setTimeout(() => {
+          navigation.replace('HomeStack');
+        }, 1500);
+      } else {
+        setTimeout(() => {
+          navigation.replace('AuthStack');
+        }, 1500);
+      }
+    };
+    checkIfSignedIn();
   }, []);
 
   return (

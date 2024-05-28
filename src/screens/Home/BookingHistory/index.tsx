@@ -1,97 +1,105 @@
-import React from 'react';
-import {View, FlatList, StyleSheet} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  View,
+  FlatList,
+  StyleSheet,
+  Text,
+  ActivityIndicator,
+} from 'react-native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
 import {Theme} from '../../../Theme/Theme';
-
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {Logo} from '../../../assets/components/Logo';
 import {SmallHeading} from '../../../assets/components/Heading';
-import {ServiceImages} from '../../../Theme/AppImages';
 import {ServiceRenderItem} from '../../../assets/components/ServiceRenderItem';
 
 interface ScreenProps {
   navigation: NativeStackNavigationProp<any>;
 }
 
-const Services = [
-  {
-    img: ServiceImages['1'],
-    title: 'Auto Detailing',
-    description:
-      'Welcome to Benedetto Auto Detail, your one-stop solution for premium auto detailing services.',
-  },
-  {
-    img: ServiceImages['2'],
-    title: 'Ceramic Coating',
-    description:
-      'CRYSTAL SERUM CERAMIC COATING provides a Supreme Hard Protection, Scratch & Swirls Resistant.',
-  },
-  {
-    img: ServiceImages['3'],
-    title: 'Interior Coating',
-    description:
-      'LEATHER GUARD COATING is made out of nanotechnology and is a Super Hydro-Phobic Coating that Protects.',
-  },
-  {
-    img: ServiceImages['4'],
-    title: 'Paint Protection Film',
-    description:
-      'Benedetto Auto Detail understands that your vehicle is an investment that you want to protect.',
-  },
-];
-
 const BookingHistory: React.FC<ScreenProps> = ({navigation}) => {
+  const [data, setData] = useState([]);
+  const [showActivityIndicator, setShowActivityIndicator] = useState(false);
+
+  useEffect(() => {
+    const handleGetHistory = async () => {
+      try {
+        setShowActivityIndicator(true);
+        const history = await firestore()
+          .collection('HISTORY')
+          .doc(auth().currentUser?.email)
+          .get();
+
+        const serviceItems = await firestore().collection('SERVICES').get();
+        setData(
+          history.data().bookings.map(k => {
+            return {
+              bookingData: k,
+              serviceData: serviceItems.docs.filter(
+                f => f.id === k.serviceID,
+              )[0],
+            };
+          }),
+        );
+        setShowActivityIndicator(false);
+      } catch (error) {
+        setShowActivityIndicator(false);
+      }
+    };
+    handleGetHistory();
+  }, []);
+
   const renderItem = ({item}) => {
     return (
       <ServiceRenderItem
-        item={item}
+        item={item.serviceData['_data']}
         onPress={() =>
           navigation.navigate('ServiceDetail', {
             item: item,
-            wish: true,
+            path: 'history',
           })
         }>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}>
-          <SmallHeading
-            onPress={() => console.log('Booking Again')}
-            color={Theme.colors.red}>
-            Book Again
-          </SmallHeading>
-          <SmallHeading
-            onPress={() => {
-              navigation.navigate('BookingReciept', {
-                item: item,
-                thanks: false,
-              });
-            }}
-            color={Theme.colors.red}>
-            View Receipt
-          </SmallHeading>
-        </View>
+        <SmallHeading
+          onPress={() => {
+            navigation.navigate('BookingReciept', {
+              item: item,
+              thanks: false,
+            });
+          }}
+          color={Theme.colors.red}>
+          View Receipt
+        </SmallHeading>
       </ServiceRenderItem>
     );
   };
 
   return (
-    <FlatList
-      data={Services}
-      stickyHeaderIndices={[0]}
-      ListHeaderComponent={() => {
-        return (
-          <Logo back={() => navigation.goBack()}>Your Booking History</Logo>
-        );
-      }}
-      contentContainerStyle={styles.mainContentContainerStyle}
-      style={styles.mainContainer}
-      ItemSeparatorComponent={<View style={styles.margin} />}
-      renderItem={renderItem}
-      showsVerticalScrollIndicator={false}
-    />
+    <View style={styles.mainContainer}>
+      <Logo back={() => navigation.goBack()}>Your Booking History</Logo>
+      <FlatList
+        data={data}
+        contentContainerStyle={styles.mainContentContainerStyle}
+        ItemSeparatorComponent={<View style={styles.margin} />}
+        renderItem={renderItem}
+        showsVerticalScrollIndicator={false}
+        ListEmptyComponent={() => {
+          return (
+            <View style={styles.activityIndicatorWrapper}>
+              {showActivityIndicator && (
+                <ActivityIndicator color="white" size="small" />
+              )}
+              <Text style={styles.messageText}>
+                {showActivityIndicator
+                  ? 'Fetching History Data'
+                  : 'No Data to Show'}
+              </Text>
+            </View>
+          );
+        }}
+      />
+    </View>
   );
 };
 
@@ -104,9 +112,20 @@ const styles = StyleSheet.create({
     backgroundColor: Theme.colors.background,
     paddingBottom: 50,
   },
-
   margin: {
     height: 10,
+  },
+  activityIndicatorWrapper: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 20,
+  },
+  messageText: {
+    color: 'white',
+    fontSize: 12,
+    fontFamily: Theme.fontFamily.Inter.regular,
+    textAlign: 'center',
+    marginTop: 10,
   },
 });
 

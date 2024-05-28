@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,9 @@ import {
   FlatList,
   TouchableOpacity,
 } from 'react-native';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+import {useDispatch} from 'react-redux';
 
 import Octicons from 'react-native-vector-icons/Octicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -15,15 +18,19 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {Theme} from '../../../Theme/Theme';
 import {Logo} from '../../../assets/components/Logo';
 import {width} from '../../../Theme/Dimensions';
-import {AppImages, ServiceImages} from '../../../Theme/AppImages';
+import {AppImages} from '../../../Theme/AppImages';
 import {Description} from '../../../assets/components/Description';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {deleteReduxData} from '../../../redux/actions/Actions';
 
 interface ScreenProps {
   navigation: NativeStackNavigationProp<any>;
 }
 
 const Profile: React.FC<ScreenProps> = ({navigation}) => {
+  const dispatch = useDispatch();
+  const [displayName, setDisplayName] = useState('');
+  const [profilePicture, setProfilePicture] = useState('');
   const List = [
     {
       icon: <Octicons name="gear" color={Theme.colors.red} size={19} />,
@@ -38,7 +45,7 @@ const Profile: React.FC<ScreenProps> = ({navigation}) => {
           style={styles.listItemIcon}
         />
       ),
-      tag: 'My Bookings',
+      tag: 'My Booking History',
       onPress: () => navigation.navigate('BookingHistory'),
     },
     {
@@ -51,7 +58,11 @@ const Profile: React.FC<ScreenProps> = ({navigation}) => {
     {
       icon: <MaterialIcons name="logout" color={Theme.colors.red} size={20} />,
       tag: 'Logout',
-      onPress: () => navigation.replace('SplashScreen'),
+      onPress: async () => {
+        await auth().signOut();
+        dispatch(deleteReduxData());
+        navigation.replace('SplashScreen');
+      },
     },
   ];
 
@@ -67,6 +78,25 @@ const Profile: React.FC<ScreenProps> = ({navigation}) => {
     );
   };
 
+  useEffect(() => {
+    const handleGetUserProfile = async () => {
+      if (auth().currentUser?.displayName === null) {
+        const userData = await firestore()
+          .collection('USERS')
+          .doc(auth().currentUser?.email)
+          .get();
+        setDisplayName(userData['_data'].displayName);
+        setProfilePicture(
+          `https://ui-avatars.com/api/background=random?name=${userData['_data'].displayName}`,
+        );
+      } else {
+        setDisplayName(auth().currentUser?.displayName);
+        setProfilePicture(auth().currentUser?.photoURL);
+      }
+    };
+    handleGetUserProfile();
+  }, []);
+
   return (
     <View style={styles.mainContainer}>
       <Logo />
@@ -75,9 +105,9 @@ const Profile: React.FC<ScreenProps> = ({navigation}) => {
         ListHeaderComponent={() => {
           return (
             <View style={styles.profileCard}>
-              <Image source={ServiceImages[3]} style={styles.image} />
-              <Text style={styles.userName}>Lorem Ipsum</Text>
-              <Description size={10}>lorem@Ipsum.com</Description>
+              <Image style={styles.image} source={{uri: profilePicture}} />
+              <Text style={styles.userName}>{displayName}</Text>
+              {/* <Description size={10}>lorem@Ipsum.com</Description> */}
             </View>
           );
         }}
