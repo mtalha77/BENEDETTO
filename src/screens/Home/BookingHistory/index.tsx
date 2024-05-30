@@ -29,16 +29,16 @@ const BookingHistory: React.FC<ScreenProps> = ({navigation}) => {
         setShowActivityIndicator(true);
         const history = await firestore()
           .collection('HISTORY')
-          .doc(auth().currentUser?.email)
+          .where('emailID', '==', auth().currentUser?.email)
           .get();
 
         const serviceItems = await firestore().collection('SERVICES').get();
         setData(
-          history.data().bookings.map(k => {
+          history.docs.map(k => {
             return {
               bookingData: k,
               serviceData: serviceItems.docs.filter(
-                f => f.id === k.serviceID,
+                f => f.id === k['_data'].serviceID,
               )[0],
             };
           }),

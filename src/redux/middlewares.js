@@ -1,11 +1,11 @@
-// import {createLogger} from 'redux-logger';
+import {createLogger} from 'redux-logger';
 import thunk from 'redux-thunk';
 
 const middleware = [];
-// const logger = createLogger();
+const logger = createLogger();
 
-// middleware.push(logger, thunk);
+middleware.push(logger, thunk);
 // commiting logger for release
-middleware.push(thunk);
+// middleware.push(thunk);
 
 export default middleware;

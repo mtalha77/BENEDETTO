@@ -34,8 +34,6 @@ interface ScreenProps {
 const BookingReciept: React.FC<ScreenProps> = ({navigation, route}) => {
   const {item, thanks} = route.params;
 
-  console.log(item);
-
   const [displayName, setDisplayName] = useState('');
 
   useEffect(() => {
@@ -74,14 +72,14 @@ const BookingReciept: React.FC<ScreenProps> = ({navigation, route}) => {
       <RowField prefix="Name">{displayName}</RowField>
       <RowField prefix="Service">{item.serviceData['_data'].title}</RowField>
       <RowField prefix="Date">
-        {item?.bookingData['_data']?.date
-          ? item?.bookingData['_data']?.date
-          : item?.bookingData?.date}
+        {item?.bookingData['_data']?.timeStamp
+          ? new Date(item?.bookingData['_data']?.timeStamp).toDateString()
+          : new Date(item?.bookingData?.timeStamp).toDateString()}
       </RowField>
       <RowField prefix="Time">
-        {item?.bookingData['_data']?.time
-          ? item?.bookingData['_data']?.time
-          : item?.bookingData?.time}
+        {item?.bookingData['_data']?.timeStamp
+          ? new Date(item?.bookingData['_data']?.timeStamp).toLocaleTimeString()
+          : new Date(item?.bookingData?.timeStamp).toLocaleTimeString()}
       </RowField>
       <RowField prefix="Total Amount:">
         $ {item.serviceData['_data'].price}

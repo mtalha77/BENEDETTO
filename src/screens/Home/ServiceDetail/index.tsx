@@ -132,14 +132,18 @@ const ServiceDetail: React.FC<ScreenProps> = ({navigation, route}) => {
     } else {
       setShowMessage('booking your slot');
       dateTimeRBSheet.current.close();
-      let tempDate = new Date(date).toDateString();
-      let tempTime = new Date(time).toLocaleTimeString();
+      let tempDate = new Date(date).toISOString();
+      let tempTime = new Date(time).toISOString();
+      let finalTimeStamp = `${tempDate.split('T')[0]}T${
+        tempTime.split('T')[1]
+      }`;
+
       await firestore()
         .collection('CART')
         .add({
-          serviceID: path === 'history' ? item.bookingData.serviceID : item.id,
-          date: tempDate,
-          time: tempTime,
+          serviceID:
+            path === 'history' ? item.bookingData['_data'].serviceID : item.id,
+          timeStamp: finalTimeStamp,
           emailID: auth().currentUser?.email,
         });
 
@@ -163,8 +167,7 @@ const ServiceDetail: React.FC<ScreenProps> = ({navigation, route}) => {
           },
           bookingData: {
             _data: {
-              date: tempDate,
-              time: tempTime,
+              timeStamp: finalTimeStamp,
             },
           },
         },

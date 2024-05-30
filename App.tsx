@@ -9,16 +9,11 @@ import {PersistGate} from 'redux-persist/lib/integration/react';
 import MainNav from './src/navigation/MainNav';
 import {Theme} from './src/Theme/Theme';
 import {AppImages} from './src/Theme/AppImages';
-import AdminNav from './src/ADMIN/AdminNav';
-
-const ISADMIN = false;
 
 const App = () => {
   const {isConnected} = useNetInfo();
   if (!isConnected) return <NoInterNet />;
-  else if (ISADMIN) {
-    return <AdminNav />;
-  } else
+  else
     return (
       <Provider store={store}>
         <PersistGate persistor={persister}>
