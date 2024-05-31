@@ -85,7 +85,7 @@ const SocialAuthentication: React.FC<SocialLoginProps> = ({children}) => {
   };
 
   const handleNameSaving = async () => {
-    const email = await auth().currentUser?.email;
+    const email = auth().currentUser?.email;
     await firestore().collection('USERS').doc(email).set({
       displayName: auth().currentUser?.displayName,
     });

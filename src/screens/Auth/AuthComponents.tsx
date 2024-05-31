@@ -5,14 +5,12 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
-  Image,
   ViewStyle,
 } from 'react-native';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import {Theme} from '../../Theme/Theme';
-import {width} from '../../Theme/Dimensions';
 
 interface HeadingProps {
   children: string;

@@ -17,7 +17,7 @@ import WishList from '../../screens/Home/WishList';
 import Cart from '../../screens/Home/Cart';
 import Profile from '../../screens/Home/Profile';
 import Chat from '../../screens/Home/Chat';
-import {height, width} from '../../Theme/Dimensions';
+import {width} from '../../Theme/Dimensions';
 import {Theme} from '../../Theme/Theme';
 
 const HomeTab = () => {

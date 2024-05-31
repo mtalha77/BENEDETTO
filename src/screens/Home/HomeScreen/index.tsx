@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import firestore from '@react-native-firebase/firestore';
-import {useDispatch, useSelector} from 'react-redux';
 
 import {Theme} from '../../../Theme/Theme';
 import {Logo} from '../../../assets/components/Logo';

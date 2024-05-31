@@ -19,7 +19,6 @@ import {Theme} from '../../../Theme/Theme';
 import {Logo} from '../../../assets/components/Logo';
 import {width} from '../../../Theme/Dimensions';
 import {AppImages} from '../../../Theme/AppImages';
-import {Description} from '../../../assets/components/Description';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {deleteReduxData} from '../../../redux/actions/Actions';
 
@@ -66,7 +65,7 @@ const Profile: React.FC<ScreenProps> = ({navigation}) => {
     },
   ];
 
-  const renderItem = ({item, index}) => {
+  const renderItem = ({item}) => {
     return (
       <TouchableOpacity
         activeOpacity={0.8}
