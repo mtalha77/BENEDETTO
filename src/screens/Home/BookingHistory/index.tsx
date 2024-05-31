@@ -66,6 +66,7 @@ const BookingHistory: React.FC<ScreenProps> = ({navigation}) => {
             navigation.navigate('BookingReciept', {
               item: item,
               thanks: false,
+              isComplete: true,
             });
           }}
           color={Theme.colors.red}>

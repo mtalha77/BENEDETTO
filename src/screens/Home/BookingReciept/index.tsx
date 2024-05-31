@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, Text} from 'react-native';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
@@ -13,15 +13,29 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 interface RowFieldProps {
   children: string;
   prefix: string;
+  isGreen?: boolean;
 }
 
-const RowField: React.FC<RowFieldProps> = ({prefix, children}) => {
+const RowField: React.FC<RowFieldProps> = ({prefix, children, isGreen}) => {
   return (
     <View style={styles.rowFieldWrapper}>
       <SmallHeading size={12}>{prefix}:</SmallHeading>
-      <Description color="white" size={10}>
+      <Text
+        style={{
+          color:
+            isGreen === undefined
+              ? 'white'
+              : isGreen === false
+              ? Theme.colors.red
+              : 'green',
+          fontSize: isGreen === undefined ? 12 : 14,
+          fontFamily:
+            isGreen === undefined
+              ? Theme.fontFamily.Inter.regular
+              : Theme.fontFamily.Inter.semiBold,
+        }}>
         {children}
-      </Description>
+      </Text>
     </View>
   );
 };
@@ -32,7 +46,7 @@ interface ScreenProps {
 }
 
 const BookingReciept: React.FC<ScreenProps> = ({navigation, route}) => {
-  const {item, thanks} = route.params;
+  const {item, thanks, isComplete} = route.params;
 
   const [displayName, setDisplayName] = useState('');
 
@@ -81,8 +95,11 @@ const BookingReciept: React.FC<ScreenProps> = ({navigation, route}) => {
           ? new Date(item?.bookingData['_data']?.timeStamp).toLocaleTimeString()
           : new Date(item?.bookingData?.timeStamp).toLocaleTimeString()}
       </RowField>
-      <RowField prefix="Total Amount:">
+      <RowField prefix="Total Amount">
         $ {item.serviceData['_data'].price}
+      </RowField>
+      <RowField isGreen={isComplete} prefix="Status">
+        {isComplete ? 'Completed' : 'Pending'}
       </RowField>
     </View>
   );
@@ -95,10 +112,10 @@ const styles = StyleSheet.create({
   },
   rowFieldWrapper: {
     flexDirection: 'row',
-    paddingLeft: 15,
+    paddingHorizontal: 15,
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: -10,
+    marginBottom: 10,
   },
   description: {
     width: width - 20,

@@ -172,6 +172,7 @@ const ServiceDetail: React.FC<ScreenProps> = ({navigation, route}) => {
           },
         },
         thanks: true,
+        isComplete: false,
       });
     }
   };
@@ -179,6 +180,7 @@ const ServiceDetail: React.FC<ScreenProps> = ({navigation, route}) => {
   const showReciept = () => {
     navigation.navigate('BookingReciept', {
       item: item,
+      isComplete: false,
     });
   };
 
@@ -302,8 +304,7 @@ const ServiceDetail: React.FC<ScreenProps> = ({navigation, route}) => {
             mode={pickerMode}
             display="spinner"
             onChange={pickerMode === 'date' ? dateSet : timeSet}
-            themeVariant="dark"
-            positiveButton={{label: 'select', textColor: 'white'}}
+            positiveButton={{label: 'select'}}
           />
         ) : (
           <View style={styles.pickerContainer}>
