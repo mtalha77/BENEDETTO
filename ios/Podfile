@@ -38,4 +38,5 @@ target 'BENEDETTO' do
       # :ccache_enabled => true
     )
   end
+  pod 'RNSquareInAppPayments', :path => '../node_modules/react-native-square-in-app-payments'
 end

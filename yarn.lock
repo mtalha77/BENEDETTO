@@ -3218,6 +3218,7 @@ __metadata:
     react-native-raw-bottom-sheet: ^3.0.0
     react-native-safe-area-context: ^4.10.1
     react-native-screens: ^3.31.1
+    react-native-square-in-app-payments: ^1.7.6
     react-native-toast-message: ^2.2.0
     react-native-vector-icons: ^10.1.0
     react-redux: ^9.1.2
@@ -8396,6 +8397,15 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 1fc61cf7a223b3ef1c8000e74416c8953561c5fa0861557da43659db62a640e37fb51fbdc35dae810a665881a7aa9eeaf1873e90f67404b4dda53a672464a7fe
+  languageName: node
+  linkType: hard
+
+"react-native-square-in-app-payments@npm:^1.7.6":
+  version: 1.7.6
+  resolution: "react-native-square-in-app-payments@npm:1.7.6"
+  peerDependencies:
+    react-native: ">= 0.57.8"
+  checksum: 3c9c9867224caf42ddef6eea970c9e156e8035f98a50b7d4365e5a409b2bce6c92107728e76e1c0850f710061efa5589dcf5f2cd84e71a3f1ef2a19cb761da95
   languageName: node
   linkType: hard
 

@@ -2360,6 +2360,10 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - RNSquareInAppPayments (1.6.3):
+    - React
+    - SquareBuyerVerificationSDK (= 1.6.3)
+    - SquareInAppPaymentsSDK (= 1.6.3)
   - RNVectorIcons (10.1.0):
     - DoubleConversion
     - glog
@@ -2382,6 +2386,8 @@ PODS:
     - ReactCommon/turbomodule/core
     - Yoga
   - SocketRocket (0.7.0)
+  - SquareBuyerVerificationSDK (1.6.3)
+  - SquareInAppPaymentsSDK (1.6.3)
   - Yoga (0.0.0)
 
 DEPENDENCIES:
@@ -2451,6 +2457,7 @@ DEPENDENCIES:
   - "RNFBFirestore (from `../node_modules/@react-native-firebase/firestore`)"
   - "RNGoogleSignin (from `../node_modules/@react-native-google-signin/google-signin`)"
   - RNScreens (from `../node_modules/react-native-screens`)
+  - RNSquareInAppPayments (from `../node_modules/react-native-square-in-app-payments`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -2485,6 +2492,8 @@ SPEC REPOS:
     - PromisesObjC
     - RecaptchaInterop
     - SocketRocket
+    - SquareBuyerVerificationSDK
+    - SquareInAppPaymentsSDK
 
 EXTERNAL SOURCES:
   boost:
@@ -2616,6 +2625,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-google-signin/google-signin"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNSquareInAppPayments:
+    :path: "../node_modules/react-native-square-in-app-payments"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
   Yoga:
@@ -2714,10 +2725,13 @@ SPEC CHECKSUMS:
   RNFBFirestore: 1e78cdee90937aa4da26e1ad0a0e0838d966aad1
   RNGoogleSignin: 24d3b3261f78b0fae0aa013f8ab6f8d25e369b0c
   RNScreens: 30249f9331c3b00ae7cb7922e11f58b3ed369c07
+  RNSquareInAppPayments: 69e4c6d6be92bc7f94cca947fc91264dc8f8343b
   RNVectorIcons: 7ac7aaa83f8f3d4c7c0f7daea5a431e91a29b0cd
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
+  SquareBuyerVerificationSDK: d325f473a724cfa5684a837296a307152ca52854
+  SquareInAppPaymentsSDK: 4d7f1e984fee5d8d7dbd44a67661ca1aedee7f76
   Yoga: d02ee88821190d82b2daa5cd15640a82ffafaaab
 
-PODFILE CHECKSUM: b3385b0513e3cc2a3fb2af4d2e5fb0004bae65cb
+PODFILE CHECKSUM: c824a7d80ede4f2a16b0a2e56668d9e117a056e6
 
 COCOAPODS: 1.14.3

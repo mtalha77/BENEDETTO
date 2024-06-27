@@ -6,6 +6,7 @@ import Login from '../../screens/Auth/Login';
 import SignUp from '../../screens/Auth/SignUp';
 import ForgotPassword from '../../screens/Auth/ForgotPassword';
 import ResetPassword from '../../screens/Auth/ResetPassword';
+import {Theme} from '../../Theme/Theme';
 
 const AuthStack = () => {
   const Stack = createNativeStackNavigator();
@@ -13,6 +14,7 @@ const AuthStack = () => {
     <SafeAreaView
       style={{
         flex: 1,
+        backgroundColor: Theme.colors.background,
       }}>
       <Stack.Navigator
         initialRouteName="Login"

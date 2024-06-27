@@ -1,4 +1,4 @@
-import React, {useRef, useState, useCallback} from 'react';
+import React, {useRef, useState, useCallback, useEffect} from 'react';
 import {
   View,
   Text,
@@ -17,6 +17,7 @@ import DateTimePicker, {
 } from '@react-native-community/datetimepicker';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
+import {SQIPCardEntry} from 'react-native-square-in-app-payments';
 
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
@@ -79,6 +80,8 @@ const ServiceDetail: React.FC<ScreenProps> = ({navigation, route}) => {
   const [date, setDate] = useState('Date');
   const [time, setTime] = useState('Time');
 
+  const [cardEntryInProgress, setCardEntryInProgress] = useState(false);
+
   const [showMessage, setShowMessage] = useState('');
 
   const ITEM = path === '' ? item : item.serviceData;
@@ -130,51 +133,110 @@ const ServiceDetail: React.FC<ScreenProps> = ({navigation, route}) => {
         text2: 'please give and date and time of your booking.',
       });
     } else {
-      setShowMessage('booking your slot');
+      const cardEntryConfig = {
+        collectPostalCode: false,
+      };
+      setCardEntryInProgress(true);
       dateTimeRBSheet.current.close();
-      let tempDate = new Date(date).toISOString();
-      let tempTime = new Date(time).toISOString();
-      let finalTimeStamp = `${tempDate.split('T')[0]}T${
-        tempTime.split('T')[1]
-      }`;
+      setTimeout(async () => {
+        await SQIPCardEntry.startCardEntryFlow(
+          cardEntryConfig,
+          onCardNonceRequestSuccess,
+          onCardEntryCancel,
+        );
+      }, 500);
+    }
+  };
 
-      await firestore()
-        .collection('CART')
-        .add({
-          serviceID:
-            path === 'history' ? item.bookingData['_data'].serviceID : item.id,
-          timeStamp: finalTimeStamp,
-          emailID: auth().currentUser?.email,
-        });
+  // Callback when successfully getting the card nonce details for processing
+  const onCardNonceRequestSuccess = async cardDetails => {
+    try {
+      // take payment with the card details
+      const url = 'https://api-qmahhinnza-uc.a.run.app/chargeForCookie';
+      const data = {
+        nonce: cardDetails.nonce,
+        name: ITEM['_data'].title,
+        amount: ITEM['_data'].price,
+      };
 
-      setDate('Date');
-      setTime('Time');
-      setPickerMode('');
-      setShowMessage('');
-      Toast.show({
-        type: 'success',
-        text1: 'Success',
-        text2: 'booked appointment succesfully',
+      let response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
       });
-      navigation.navigate('BookingReciept', {
-        item: {
-          serviceData: {
-            _data: {
-              shortDescription: ITEM['_data'].shortDescription,
-              title: ITEM['_data'].title,
-              price: ITEM['_data'].price,
-            },
-          },
-          bookingData: {
-            _data: {
-              timeStamp: finalTimeStamp,
-            },
+
+      if (response.status === 200) {
+        onEverythingDone();
+      } else {
+        let data = await response.json();
+        Toast.show({
+          type: 'error',
+          text1: 'Payment error.',
+          text2: data.errorMessage,
+        });
+      }
+
+      // payment finished successfully
+      // you must call this method to close card entry
+      await SQIPCardEntry.completeCardEntry();
+    } catch (ex) {
+      // payment failed to complete due to error
+      // notify card entry to show processing error
+      await SQIPCardEntry.showCardNonceProcessingError(ex.message);
+    }
+  };
+
+  // Callback when card entry is cancelled and UI is closed
+  const onCardEntryCancel = () => {
+    // Handle the cancel callback
+    setCardEntryInProgress(false);
+  };
+
+  const onEverythingDone = async () => {
+    setShowMessage('booking your slot');
+    dateTimeRBSheet.current.close();
+    let tempDate = new Date(date).toISOString();
+    let tempTime = new Date(time).toISOString();
+    let finalTimeStamp = `${tempDate.split('T')[0]}T${tempTime.split('T')[1]}`;
+
+    await firestore()
+      .collection('CART')
+      .add({
+        serviceID:
+          path === 'history' ? item.bookingData['_data'].serviceID : item.id,
+        timeStamp: finalTimeStamp,
+        emailID: auth().currentUser?.email,
+      });
+
+    setDate('Date');
+    setTime('Time');
+    setPickerMode('');
+    setShowMessage('');
+    Toast.show({
+      type: 'success',
+      text1: 'Success',
+      text2: 'booked appointment succesfully',
+    });
+    navigation.navigate('BookingReciept', {
+      item: {
+        serviceData: {
+          _data: {
+            shortDescription: ITEM['_data'].shortDescription,
+            title: ITEM['_data'].title,
+            price: ITEM['_data'].price,
           },
         },
-        thanks: true,
-        isComplete: false,
-      });
-    }
+        bookingData: {
+          _data: {
+            timeStamp: finalTimeStamp,
+          },
+        },
+      },
+      thanks: true,
+      isComplete: false,
+    });
   };
 
   const showReciept = () => {
@@ -186,7 +248,7 @@ const ServiceDetail: React.FC<ScreenProps> = ({navigation, route}) => {
 
   return (
     <View style={styles.mainContainer}>
-      <Logo back={navigation.goBack} />
+      <Logo back={() => navigation.goBack()} />
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={styles.scrollContainer}>
