@@ -15,7 +15,7 @@ import {Theme} from '../../../Theme/Theme';
 import {Logo} from '../../../assets/components/Logo';
 import {LargeHeading, SmallHeading} from '../../../assets/components/Heading';
 
-import {ServiceRenderItem} from '../../../assets/components/ServiceRenderItem';
+import {CartRenderItem} from '../../../assets/components/ServiceRenderItem';
 
 interface ScreenProps {
   navigation: NativeStackNavigationProp<any>;
@@ -38,9 +38,9 @@ const Cart: React.FC<ScreenProps> = ({navigation}) => {
           cartItems.docs.map(k => {
             return {
               bookingData: k,
-              serviceData: serviceItems.docs.filter(
-                f => f.id === k['_data'].serviceID,
-              )[0],
+              serviceData: k._data.services.map(k => {
+                return serviceItems.docs.filter(f => f.id === k)[0];
+              }),
             };
           }),
         );
@@ -50,68 +50,61 @@ const Cart: React.FC<ScreenProps> = ({navigation}) => {
     }, []),
   );
 
-  const renderItem = ({item}) => {
+  const renderItem = ({item}: any) => {
     return (
-      <ServiceRenderItem
+      <CartRenderItem
         showPrice
-        item={item.serviceData['_data']}
+        item={item.serviceData}
         onPress={() =>
-          navigation.navigate('ServiceDetail', {
+          navigation.navigate('BookingReciept', {
             item: item,
-            path: 'cart',
+            isComplete: false,
           })
         }>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}>
-          <SmallHeading color={Theme.colors.red}>Read More</SmallHeading>
-          {/* <SmallHeading
-            onPress={() => {s
-              console.log('removed Item');
-            }}
-            color={Theme.colors.red}>
-            Remove From Cart
-          </SmallHeading> */}
-        </View>
-      </ServiceRenderItem>
+        <SmallHeading color={Theme.colors.red}>View Reciept</SmallHeading>
+      </CartRenderItem>
     );
+  };
+
+  const listHeaderComponent = () => {
+    return (
+      <View>
+        <Logo />
+        <View style={styles.headingWrapper}>
+          <LargeHeading>Services In Your Cart</LargeHeading>
+        </View>
+      </View>
+    );
+  };
+
+  const listEmptyComponent = () => {
+    return (
+      <View style={styles.activityIndicatorWrapper}>
+        {showActivityIndicator && (
+          <ActivityIndicator color="white" size="small" />
+        )}
+        <Text style={styles.messageText}>
+          {showActivityIndicator ? 'Fetching Cart Data' : 'No Data to Show'}
+        </Text>
+      </View>
+    );
+  };
+
+  const itemSeparatorComponent = () => {
+    return <View style={styles.margin} />;
   };
 
   return (
     <FlatList
       data={cartData}
       stickyHeaderIndices={[0]}
-      showsVerticalScrollIndicator={false}
-      ListHeaderComponent={() => {
-        return (
-          <View>
-            <Logo />
-            <View style={styles.headingWrapper}>
-              <LargeHeading>Services In Your Cart</LargeHeading>
-            </View>
-          </View>
-        );
-      }}
+      ListHeaderComponent={listHeaderComponent}
       contentContainerStyle={styles.mainContentContainerStyle}
       style={styles.mainContainer}
-      ItemSeparatorComponent={<View style={styles.margin} />}
+      ItemSeparatorComponent={itemSeparatorComponent}
       renderItem={renderItem}
       showsVerticalScrollIndicator={false}
-      ListEmptyComponent={() => {
-        return (
-          <View style={styles.activityIndicatorWrapper}>
-            {showActivityIndicator && (
-              <ActivityIndicator color="white" size="small" />
-            )}
-            <Text style={styles.messageText}>
-              {showActivityIndicator ? 'Fetching Cart Data' : 'No Data to Show'}
-            </Text>
-          </View>
-        );
-      }}
+      ListEmptyComponent={listEmptyComponent}
     />
   );
 };

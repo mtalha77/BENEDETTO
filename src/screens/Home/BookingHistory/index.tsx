@@ -13,7 +13,7 @@ import firestore from '@react-native-firebase/firestore';
 import {Theme} from '../../../Theme/Theme';
 import {Logo} from '../../../assets/components/Logo';
 import {SmallHeading} from '../../../assets/components/Heading';
-import {ServiceRenderItem} from '../../../assets/components/ServiceRenderItem';
+import {CartRenderItem} from '../../../assets/components/ServiceRenderItem';
 
 interface ScreenProps {
   navigation: NativeStackNavigationProp<any>;
@@ -37,9 +37,9 @@ const BookingHistory: React.FC<ScreenProps> = ({navigation}) => {
           history.docs.map(k => {
             return {
               bookingData: k,
-              serviceData: serviceItems.docs.filter(
-                f => f.id === k['_data'].serviceID,
-              )[0],
+              serviceData: k._data.services.map(k => {
+                return serviceItems.docs.filter(f => f.id === k)[0];
+              }),
             };
           }),
         );
@@ -51,29 +51,38 @@ const BookingHistory: React.FC<ScreenProps> = ({navigation}) => {
     handleGetHistory();
   }, []);
 
-  const renderItem = ({item}) => {
+  const renderItem = ({item}: any) => {
     return (
-      <ServiceRenderItem
-        item={item.serviceData['_data']}
-        onPress={() =>
-          navigation.navigate('ServiceDetail', {
+      <CartRenderItem
+        showPrice
+        item={item.serviceData}
+        onPress={() => {
+          navigation.navigate('BookingReciept', {
             item: item,
-            path: 'history',
-          })
-        }>
-        <SmallHeading
-          onPress={() => {
-            navigation.navigate('BookingReciept', {
-              item: item,
-              thanks: false,
-              isComplete: true,
-            });
-          }}
-          color={Theme.colors.red}>
-          View Receipt
-        </SmallHeading>
-      </ServiceRenderItem>
+            thanks: false,
+            isComplete: true,
+          });
+        }}>
+        <SmallHeading color={'green'}>View Reciept</SmallHeading>
+      </CartRenderItem>
     );
+  };
+
+  const listEmptyComponent = () => {
+    return (
+      <View style={styles.activityIndicatorWrapper}>
+        {showActivityIndicator && (
+          <ActivityIndicator color="white" size="small" />
+        )}
+        <Text style={styles.messageText}>
+          {showActivityIndicator ? 'Fetching History Data' : 'No Data to Show'}
+        </Text>
+      </View>
+    );
+  };
+
+  const itemSeparatorComponent = () => {
+    return <View style={styles.margin} />;
   };
 
   return (
@@ -82,23 +91,10 @@ const BookingHistory: React.FC<ScreenProps> = ({navigation}) => {
       <FlatList
         data={data}
         contentContainerStyle={styles.mainContentContainerStyle}
-        ItemSeparatorComponent={<View style={styles.margin} />}
+        ItemSeparatorComponent={itemSeparatorComponent}
         renderItem={renderItem}
         showsVerticalScrollIndicator={false}
-        ListEmptyComponent={() => {
-          return (
-            <View style={styles.activityIndicatorWrapper}>
-              {showActivityIndicator && (
-                <ActivityIndicator color="white" size="small" />
-              )}
-              <Text style={styles.messageText}>
-                {showActivityIndicator
-                  ? 'Fetching History Data'
-                  : 'No Data to Show'}
-              </Text>
-            </View>
-          );
-        }}
+        ListEmptyComponent={listEmptyComponent}
       />
     </View>
   );

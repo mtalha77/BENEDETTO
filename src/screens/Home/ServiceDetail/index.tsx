@@ -153,10 +153,10 @@ const ServiceDetail: React.FC<ScreenProps> = ({navigation, route}) => {
     try {
       // take payment with the card details
       const url = 'https://api-qmahhinnza-uc.a.run.app/chargeForCookie';
-      const data = {
+      const params = {
         nonce: cardDetails.nonce,
-        name: ITEM['_data'].title,
-        amount: ITEM['_data'].price,
+        name: ITEM._data.title,
+        amount: ITEM._data.price,
       };
 
       let response = await fetch(url, {
@@ -164,7 +164,7 @@ const ServiceDetail: React.FC<ScreenProps> = ({navigation, route}) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(params),
       });
 
       if (response.status === 200) {
@@ -204,10 +204,11 @@ const ServiceDetail: React.FC<ScreenProps> = ({navigation, route}) => {
     await firestore()
       .collection('CART')
       .add({
-        serviceID:
-          path === 'history' ? item.bookingData['_data'].serviceID : item.id,
+        services:
+          path === 'history' ? [item.bookingData._data.serviceID] : [item.id],
         timeStamp: finalTimeStamp,
         emailID: auth().currentUser?.email,
+        displayName: auth().currentUser?.displayName,
       });
 
     setDate('Date');
@@ -221,13 +222,15 @@ const ServiceDetail: React.FC<ScreenProps> = ({navigation, route}) => {
     });
     navigation.navigate('BookingReciept', {
       item: {
-        serviceData: {
-          _data: {
-            shortDescription: ITEM['_data'].shortDescription,
-            title: ITEM['_data'].title,
-            price: ITEM['_data'].price,
+        serviceData: [
+          {
+            _data: {
+              shortDescription: ITEM._data.shortDescription,
+              title: ITEM._data.title,
+              price: ITEM._data.price,
+            },
           },
-        },
+        ],
         bookingData: {
           _data: {
             timeStamp: finalTimeStamp,
@@ -253,7 +256,7 @@ const ServiceDetail: React.FC<ScreenProps> = ({navigation, route}) => {
         showsVerticalScrollIndicator={false}
         style={styles.scrollContainer}>
         <ImageBackground
-          source={{uri: ITEM['_data'].image}}
+          source={{uri: ITEM._data.image}}
           resizeMode="cover"
           style={styles.image}>
           <LinearGradient
@@ -264,16 +267,16 @@ const ServiceDetail: React.FC<ScreenProps> = ({navigation, route}) => {
           />
         </ImageBackground>
         <View style={styles.contentContainer}>
-          <LargeHeading>{ITEM['_data'].title}</LargeHeading>
+          <LargeHeading>{ITEM._data.title}</LargeHeading>
           <View style={styles.row}>
             <AntDesign name="star" color="transparent" size={12} />
             <Text style={styles.rating} />
             {/* <Description size={10}> </Description> */}
           </View>
-          <Description size={12}>{ITEM['_data'].description}</Description>
+          <Description size={12}>{ITEM._data.description}</Description>
           <View style={[styles.row, styles.priceWrapper]}>
             <Text style={styles.price}>Total Price</Text>
-            <Text style={styles.price}>$ {ITEM['_data'].price}</Text>
+            <Text style={styles.price}>$ {ITEM._data.price}</Text>
           </View>
         </View>
         <View style={styles.bottomButtonRowWrapper}>
@@ -343,10 +346,13 @@ const ServiceDetail: React.FC<ScreenProps> = ({navigation, route}) => {
           </DateTimeField>
         </View>
         <View
-          style={{
-            width: '100%',
-            height: 70,
-          }}>
+          style={StyleSheet.compose(
+            {
+              width: '100%',
+              height: 70,
+            },
+            {},
+          )}>
           <Button onPress={bookService}>Continue</Button>
         </View>
       </RBSheet>

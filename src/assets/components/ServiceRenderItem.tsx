@@ -1,14 +1,15 @@
 import React from 'react';
-import {TouchableOpacity, Image, StyleSheet, View} from 'react-native';
+import {TouchableOpacity, Image, StyleSheet, View, Text} from 'react-native';
 
 import {width} from '../../Theme/Dimensions';
 import {SmallHeading} from './Heading';
 import {Description} from './Description';
+import {Theme} from '../../Theme/Theme';
 
 interface ComponentProps {
   onPress: () => void;
   children?: React.ReactNode;
-  item: {img: number; title: string; description: string};
+  item: any;
   showPrice?: boolean;
 }
 
@@ -34,11 +35,84 @@ const ServiceRenderItem: React.FC<ComponentProps> = ({
           )}
         </View>
         <View style={styles.margin} />
-
         <Description height={50} size={10}>
           {item.shortDescription}
         </Description>
         {children}
+      </View>
+    </TouchableOpacity>
+  );
+};
+
+const CartRenderItem: React.FC<ComponentProps> = ({
+  item,
+  children,
+  onPress,
+  showPrice,
+}) => {
+  return (
+    <TouchableOpacity
+      activeOpacity={1}
+      onPress={onPress}
+      style={StyleSheet.compose(styles.container, {
+        flexDirection: 'column',
+      })}>
+      {item.map(k => {
+        return (
+          <View
+            style={StyleSheet.compose(styles.container, {
+              paddingTop: 5,
+              paddingBottom: 0,
+            })}>
+            <Image style={styles.image} source={{uri: k._data.image}} />
+            <View style={styles.subContainer}>
+              <View style={styles.row}>
+                <SmallHeading>{k._data.title}</SmallHeading>
+                {showPrice && (
+                  <View style={styles.priceWrapper}>
+                    <SmallHeading size={10}>$ {k._data.price}</SmallHeading>
+                  </View>
+                )}
+              </View>
+              <View style={styles.margin} />
+              <Description height={50} size={10}>
+                {k._data.shortDescription}
+              </Description>
+            </View>
+          </View>
+        );
+      })}
+      <View
+        style={StyleSheet.compose(styles.row, {
+          marginTop: 5,
+        })}>
+        {children}
+        <Text
+          style={StyleSheet.compose(
+            {
+              color: Theme.colors.red,
+              alignSelf: 'flex-end',
+              fontFamily: Theme.fontFamily.Inter.regular,
+              fontSize: 12,
+            },
+            {},
+          )}>
+          total Price :{' '}
+          <Text
+            style={StyleSheet.compose(
+              {},
+              {
+                color: 'white',
+                fontSize: 16,
+                fontFamily: Theme.fontFamily.Inter.semiBold,
+              },
+            )}>
+            ${' '}
+            {item.reduce((acc, curr) => {
+              return acc + parseInt(curr._data.price, 10);
+            }, 0)}
+          </Text>
+        </Text>
       </View>
     </TouchableOpacity>
   );
@@ -78,4 +152,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export {ServiceRenderItem};
+export {ServiceRenderItem, CartRenderItem};

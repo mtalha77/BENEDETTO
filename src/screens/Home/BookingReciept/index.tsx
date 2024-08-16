@@ -21,19 +21,23 @@ const RowField: React.FC<RowFieldProps> = ({prefix, children, isGreen}) => {
     <View style={styles.rowFieldWrapper}>
       <SmallHeading size={12}>{prefix}:</SmallHeading>
       <Text
-        style={{
-          color:
-            isGreen === undefined
-              ? 'white'
-              : isGreen === false
-              ? Theme.colors.red
-              : 'green',
-          fontSize: isGreen === undefined ? 12 : 14,
-          fontFamily:
-            isGreen === undefined
-              ? Theme.fontFamily.Inter.regular
-              : Theme.fontFamily.Inter.semiBold,
-        }}>
+        style={StyleSheet.compose(
+          {
+            color:
+              isGreen === undefined
+                ? 'white'
+                : isGreen === false
+                ? Theme.colors.red
+                : 'green',
+            fontSize: isGreen === undefined ? 12 : 14,
+            fontFamily:
+              isGreen === undefined
+                ? Theme.fontFamily.Inter.regular
+                : Theme.fontFamily.Inter.semiBold,
+            textAlign: 'right',
+          },
+          {},
+        )}>
         {children}
       </Text>
     </View>
@@ -51,13 +55,15 @@ const BookingReciept: React.FC<ScreenProps> = ({navigation, route}) => {
   const [displayName, setDisplayName] = useState('');
 
   useEffect(() => {
+    console.log(item.serviceData);
+
     const handleGetUserProfile = async () => {
       if (auth().currentUser?.displayName === null) {
         const userData = await firestore()
           .collection('USERS')
           .doc(auth().currentUser?.email)
           .get();
-        setDisplayName(userData['_data'].displayName);
+        setDisplayName(userData._data.displayName);
       } else {
         setDisplayName(auth().currentUser?.displayName);
       }
@@ -76,7 +82,7 @@ const BookingReciept: React.FC<ScreenProps> = ({navigation, route}) => {
       {thanks && (
         <>
           <Description color="white">
-            {item.serviceData['_data'].shortDescription}
+            {item.serviceData[0]._data.shortDescription}
           </Description>
           <View style={styles.description}>
             <LargeHeading>Your Booking Details Given Below</LargeHeading>
@@ -84,19 +90,28 @@ const BookingReciept: React.FC<ScreenProps> = ({navigation, route}) => {
         </>
       )}
       <RowField prefix="Name">{displayName}</RowField>
-      <RowField prefix="Service">{item.serviceData['_data'].title}</RowField>
+      <RowField prefix="Service">
+        {item.serviceData.map((k, kindex) => {
+          return `-${k._data.title}${
+            kindex < item.serviceData.length - 1 ? '\n' : ''
+          }`;
+        })}
+      </RowField>
       <RowField prefix="Date">
-        {item?.bookingData['_data']?.timeStamp
-          ? new Date(item?.bookingData['_data']?.timeStamp).toDateString()
+        {item?.bookingData._data?.timeStamp
+          ? new Date(item?.bookingData._data?.timeStamp).toDateString()
           : new Date(item?.bookingData?.timeStamp).toDateString()}
       </RowField>
       <RowField prefix="Time">
-        {item?.bookingData['_data']?.timeStamp
-          ? new Date(item?.bookingData['_data']?.timeStamp).toLocaleTimeString()
+        {item?.bookingData._data?.timeStamp
+          ? new Date(item?.bookingData._data?.timeStamp).toLocaleTimeString()
           : new Date(item?.bookingData?.timeStamp).toLocaleTimeString()}
       </RowField>
       <RowField prefix="Total Amount">
-        $ {item.serviceData['_data'].price}
+        ${' '}
+        {item.serviceData.reduce((acc, curr) => {
+          return acc + parseInt(curr._data.price, 10);
+        }, 0)}
       </RowField>
       <RowField isGreen={isComplete} prefix="Status">
         {isComplete ? 'Completed' : 'Pending'}
